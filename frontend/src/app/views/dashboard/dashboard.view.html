@@ -1,0 +1,77 @@
+<app-page-header
+  eyebrow="Panel de control"
+  [title]="greeting() + ', ' + firstName()"
+  subtitle="Resumen en vivo del registro de la 44° Convención Ministerial"
+/>
+
+@if (error()) {
+  <div class="toast error">{{ error() }}</div>
+}
+
+<section class="hero glass">
+  <div class="hero-text">
+    <span class="tricolor"><i></i><i></i><i></i></span>
+    <p class="eyebrow">Evento activo</p>
+    <h2>{{ event()?.name ?? 'Convención Ministerial' }}</h2>
+    <p class="script">{{ event()?.city ?? 'Cochabamba' }}</p>
+    <p class="muted">
+      {{ event()?.startDate ?? '01 Dic' }} — {{ event()?.endDate ?? '03 Dic 2026' }}
+      <span class="dot">·</span> {{ event()?.motto ?? 'Testifiquemos' }}
+    </p>
+  </div>
+  <div class="hero-mark" aria-hidden="true">2026</div>
+</section>
+
+<section class="stats">
+  @for (card of cardsFor(stats()); track card.label) {
+    <app-stat-card
+      [label]="card.label"
+      [value]="card.value"
+      [icon]="card.icon"
+      [hint]="card.hint"
+    />
+  }
+</section>
+
+<section class="quick">
+  <div>
+    <p class="eyebrow">Accesos rápidos</p>
+    <h2>Continuar con el registro</h2>
+  </div>
+  <div class="quick-grid">
+    @if (canSee(['admin', 'operator'])) {
+      <a routerLink="/asistencia" class="quick-card glass">
+        <span class="q-icon">✓</span>
+        <strong>Registrar asistencia</strong>
+        <small>Busque un pastor y confirme su participación</small>
+        <em>→</em>
+      </a>
+      <a routerLink="/pastores" class="quick-card glass">
+        <span class="q-icon">✝</span>
+        <strong>Nuevo pastor</strong>
+        <small>Guarde nombre y apellido; la fecha y el usuario se registran solos</small>
+        <em>→</em>
+      </a>
+    }
+    @if (canSee(['admin'])) {
+      <a routerLink="/estructura" class="quick-card glass">
+        <span class="q-icon">◇</span>
+        <strong>Organizar estructura</strong>
+        <small>Departamentos, distritos e iglesias</small>
+        <em>→</em>
+      </a>
+      <a routerLink="/usuarios" class="quick-card glass">
+        <span class="q-icon">⚙</span>
+        <strong>Usuarios de registro</strong>
+        <small>Cree cuentas y asigne roles</small>
+        <em>→</em>
+      </a>
+    }
+    <a routerLink="/reportes" class="quick-card glass">
+      <span class="q-icon">▤</span>
+      <strong>Ver reportes</strong>
+      <small>Asistencia por iglesia, distrito y región</small>
+      <em>→</em>
+    </a>
+  </div>
+</section>

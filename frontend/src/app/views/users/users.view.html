@@ -1,0 +1,80 @@
+<app-page-header
+  eyebrow="Solo administrador"
+  title="Usuarios de registro"
+  subtitle="Cree cuentas, asigne roles y controle quién puede registrar pastores y asistencia."
+/>
+
+@if (error()) { <div class="toast error">{{ error() }}</div> }
+
+<div class="grid">
+  <form class="glass form-card" (ngSubmit)="submit()">
+    <span class="tricolor"><i></i><i></i><i></i></span>
+    <p class="eyebrow">Nueva cuenta</p>
+    <h2>Crear usuario</h2>
+
+    <div class="field">
+      <label for="user-name">Nombre completo</label>
+      <input id="user-name" name="fullName" [(ngModel)]="fullName" placeholder="Ej. María Pérez" />
+    </div>
+    <div class="field">
+      <label for="user-email">Correo electrónico</label>
+      <input id="user-email" type="email" name="email" [(ngModel)]="email" placeholder="nombre@convencion.org" />
+    </div>
+    <div class="field">
+      <label for="user-password">Contraseña temporal</label>
+      <input id="user-password" type="password" name="password" [(ngModel)]="password" placeholder="Mínimo 6 caracteres" />
+    </div>
+    <div class="field">
+      <label for="user-role">Rol</label>
+      <select id="user-role" name="role" [(ngModel)]="role">
+        @for (item of roles; track item) {
+          <option [value]="item">{{ roleLabel(item) }}</option>
+        }
+      </select>
+    </div>
+    <button class="btn btn-primary" type="submit">Crear usuario</button>
+  </form>
+
+  <div class="glass list-card">
+    <div class="list-head">
+      <h2>Usuarios del sistema</h2>
+      <span class="badge muted">{{ users().length }} cuentas</span>
+    </div>
+    @if (loading()) {
+      <app-state-block [loading]="true" />
+    } @else if (users().length === 0) {
+      <app-state-block [empty]="true" emptyMessage="No hay usuarios registrados" />
+    } @else {
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Usuario</th><th>Correo</th><th>Rol</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            @for (user of users(); track user.id) {
+              <tr>
+                <td><strong>{{ user.fullName }}</strong></td>
+                <td class="muted">{{ user.email }}</td>
+                <td>
+                  <select class="role-select" [ngModel]="user.role" (ngModelChange)="changeRole.emit({ id: user.id, role: $event })">
+                    @for (item of roles; track item) {
+                      <option [value]="item">{{ roleLabel(item) }}</option>
+                    }
+                  </select>
+                </td>
+                <td>
+                  <span class="badge" [class.ok]="user.isActive" [class.muted]="!user.isActive">
+                    {{ user.isActive ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-ghost btn-sm" (click)="toggleActive.emit({ id: user.id, isActive: !user.isActive })">
+                    {{ user.isActive ? 'Desactivar' : 'Activar' }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,17 @@
+.grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
+
+.form-card { padding: 24px; }
+.form-card h2 { font-size: 1.15rem; margin: 10px 0 20px; }
+.form-card .field { margin-bottom: 16px; }
+.form-card .btn { width: 100%; }
+.hint { font-size: .75rem; margin: 14px 0 0; line-height: 1.5; }
+
+.list-card { padding: 22px; min-width: 0; }
+.list-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 16px; flex-wrap: wrap;
+  h2 { font-size: 1.1rem; }
+}
+.search { min-height: 38px !important; width: 230px !important; font-size: .85rem !important; }
+
+@media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }

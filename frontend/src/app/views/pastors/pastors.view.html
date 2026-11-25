@@ -1,0 +1,69 @@
+<app-page-header
+  eyebrow="Registro de pastores"
+  title="Pastores"
+  subtitle="Solo nombre y apellido. La fecha, hora y el usuario que registra se guardan automáticamente."
+/>
+
+@if (error()) {
+  <div class="toast error">{{ error() }}</div>
+}
+
+<div class="grid">
+  <form class="glass form-card" (ngSubmit)="submit()">
+    <span class="tricolor"><i></i><i></i><i></i></span>
+    <p class="eyebrow">Nuevo pastor</p>
+    <h2>Datos personales</h2>
+
+    <div class="field">
+      <label for="first-name">Nombre</label>
+      <input id="first-name" name="firstName" [(ngModel)]="firstName" placeholder="Ej. Juan Carlos" />
+    </div>
+    <div class="field">
+      <label for="last-name">Apellido</label>
+      <input id="last-name" name="lastName" [(ngModel)]="lastName" placeholder="Ej. Gómez Rojas" />
+    </div>
+    <div class="field">
+      <label for="pastor-church">Iglesia (opcional)</label>
+      <select id="pastor-church" name="churchId" [(ngModel)]="churchId">
+        <option value="">Sin asignar</option>
+        @for (church of churches(); track church.id) {
+          <option [value]="church.id">{{ church.name }} — {{ church.districtName }}</option>
+        }
+      </select>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar pastor</button>
+    <p class="hint muted">Auditoría automática: <strong>created_at</strong> y <strong>registered_by</strong>.</p>
+  </form>
+
+  <div class="glass list-card">
+    <div class="list-head">
+      <h2>Pastores registrados</h2>
+      <input class="search" name="search" [(ngModel)]="search" placeholder="Buscar por nombre…" />
+    </div>
+
+    @if (loading()) {
+      <app-state-block [loading]="true" />
+    } @else if (filtered().length === 0) {
+      <app-state-block [empty]="true" emptyMessage="No hay pastores registrados" />
+    } @else {
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr><th>Pastor</th><th>Iglesia</th><th>Registrado por</th><th>Fecha y hora</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (pastor of filtered(); track pastor.id) {
+              <tr>
+                <td><strong>{{ pastor.firstName }} {{ pastor.lastName }}</strong></td>
+                <td class="muted">{{ pastor.churchName ?? 'Sin asignar' }}</td>
+                <td class="muted">{{ pastor.registeredByName }}</td>
+                <td class="muted">{{ formatDate(pastor.createdAt) }}</td>
+                <td><button class="btn btn-danger btn-sm" (click)="remove.emit(pastor.id)">Eliminar</button></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

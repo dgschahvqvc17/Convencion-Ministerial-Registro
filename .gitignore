@@ -3,6 +3,7 @@ node_modules/
 dist/
 build/
 coverage/
+.angular/
 
 # Variables de entorno reales (solo se versionan los .env.example)
 .env

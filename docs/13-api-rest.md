@@ -42,7 +42,7 @@
 | `PATCH` | `/pastors/:id` | Editar pastor | Admin, Operador |
 | `DELETE` | `/pastors/:id` | Desactivar pastor | Admin, Operador |
 | `GET` | `/events` | Listar eventos | Autenticados |
-| `POST` | `/attendances` | Registrar asistencia | Admin, Operador, Pastor (propia) |
+| `POST` | `/attendances` | Registrar asistencia | Admin, Operador |
 | `GET` | `/attendances?eventId=&regionId=&districtId=&churchId=&status=&page=` | Listar asistencia | Autenticados |
 | `PATCH` | `/attendances/:id/cancel` | Cancelar asistencia | Admin, Operador |
 | `GET` | `/reports/attendance?groupBy=region` | Reporte de asistencia | Admin, Operador, Consultor |
@@ -139,9 +139,7 @@ Devuelve el mismo DTO que el ejemplo anterior. El rol `pastor` solo puede consul
 {
   "churchId": "uuid-church",
   "firstName": "Juan",
-  "lastName": "Ruiz",
-  "phone": "+591 70000000",
-  "email": "juan.ruiz@iglesia.org"
+  "lastName": "Ruiz"
 }
 
 // response 201
@@ -151,10 +149,14 @@ Devuelve el mismo DTO que el ejemplo anterior. El rol `pastor` solo puede consul
     "firstName": "Juan",
     "lastName": "Ruiz",
     "churchId": "uuid-church",
+    "registeredBy": "uuid-usuario-sesion",
+    "createdAt": "2026-12-01T09:24:00.000Z",
     "isActive": true
   }
 }
 ```
+
+> Solo nombre y apellido son datos del pastor. `registeredBy` y `createdAt` se generan automáticamente desde la sesión; el cliente no los envía.
 
 ## 6. Asistencia
 

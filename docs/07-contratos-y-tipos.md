@@ -56,11 +56,10 @@ export interface Church {
 export interface Pastor {
   readonly id: string;
   readonly churchId: string | null;
-  readonly profileId: string | null;
   readonly firstName: string;
   readonly lastName: string;
-  readonly phone: string | null;
-  readonly email: string | null;
+  readonly registeredBy: string;
+  readonly createdAt: string;
   readonly isActive: boolean;
 }
 

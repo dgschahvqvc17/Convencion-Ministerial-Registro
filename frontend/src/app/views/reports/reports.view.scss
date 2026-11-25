@@ -1,0 +1,9 @@
+.summary {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 28px; margin-bottom: 20px;
+  background: radial-gradient(circle at 80% 20%, rgba(247,181,0,.2), transparent 45%),
+    linear-gradient(120deg, rgba(43,59,160,.75), rgba(20,27,91,.9));
+  strong { display: block; font-family: var(--font-display); font-size: 2.2rem; color: var(--gold-light); }
+  .script { font-size: 2rem; }
+}
+.list-card { padding: 22px; }

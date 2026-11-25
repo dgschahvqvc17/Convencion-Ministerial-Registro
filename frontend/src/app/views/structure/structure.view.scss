@@ -1,0 +1,44 @@
+.tabs {
+  display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap;
+  button {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-radius: 10px; cursor: pointer;
+    background: rgba(43,59,160,.35); color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,.1); font-weight: 600; font-size: .88rem;
+    transition: all .18s ease;
+    &:hover { color: #fff; }
+    &.active {
+      color: var(--text-dark); font-weight: 700;
+      background: linear-gradient(180deg, var(--gold-light), var(--gold));
+      border-color: transparent;
+    }
+    span {
+      padding: 1px 7px; border-radius: 999px; font-size: .7rem;
+      background: rgba(0,0,0,.12);
+    }
+  }
+}
+
+.grid {
+  display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start;
+}
+
+.form-card { padding: 24px; }
+.form-card h2 { font-size: 1.15rem; margin: 10px 0 20px; }
+.form-card .field { margin-bottom: 16px; }
+.form-card .btn { width: 100%; }
+
+.list-card { padding: 22px; min-width: 0; }
+.list-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 16px; flex-wrap: wrap;
+  h2 { font-size: 1.1rem; }
+}
+.search {
+  min-height: 38px !important; width: 220px !important;
+  font-size: .85rem !important;
+}
+
+@media (max-width: 980px) {
+  .grid { grid-template-columns: 1fr; }
+}

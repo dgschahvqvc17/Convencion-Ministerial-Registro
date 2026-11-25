@@ -1,6 +1,8 @@
 # 04 · Modelo de datos
 
-> Estado: **propuesta**. PostgreSQL en Supabase. Convención: tablas en `snake_case` y plural; claves primarias `uuid`; fechas `timestamptz`.
+> Estado: **implementado**. PostgreSQL en Supabase. Convención: tablas en `snake_case` y plural; claves primarias `uuid`; fechas `timestamptz`.
+>
+> La fuente autoritativa es [`../supabase/migrations/0001_init.sql`](../supabase/migrations/0001_init.sql); el DDL de este documento es una referencia didáctica. Pasos para ejecutarlo: [14-guia-supabase.md](14-guia-supabase.md).
 
 ## 1. Diagrama entidad-relación
 
@@ -45,11 +47,10 @@ erDiagram
   PASTORS {
     uuid id PK
     uuid church_id FK "nullable"
-    uuid profile_id FK "nullable"
     text first_name
     text last_name
-    text phone
-    text email
+    uuid registered_by FK "automático"
+    timestamptz created_at "automático"
     boolean is_active
   }
   EVENTS {
@@ -97,7 +98,7 @@ erDiagram
 | `churches.district_id` obligatorio | RN-02: toda iglesia pertenece a un distrito |
 | `churches.lead_pastor_id` nullable | Una iglesia puede no tener responsable asignado al momento del alta |
 | `pastors.church_id` nullable | Un pastor puede estar temporalmente sin iglesia (RN-05) |
-| `pastors.profile_id` nullable | Un pastor puede no tener acceso al sistema |
+| `pastors.registered_by` NOT NULL | Auditoría: siempre se sabe quién registró al pastor |
 | `attendances` con `UNIQUE(event_id, pastor_id)` | RN-07: evita duplicados a nivel de base de datos |
 | Borrado lógico (`is_active`) | RN-06: conserva historial y evita huérfanos |
 | `events` separado | Permite reutilizar el sistema en futuras convenciones sin migrar datos |
@@ -169,12 +170,12 @@ Región / Departamento (regions)
 | --- | --- | --- | --- |
 | `id` | `uuid` | PK | Identificador |
 | `church_id` | `uuid` | FK → `churches.id`, NULL | Iglesia de pertenencia |
-| `profile_id` | `uuid` | FK → `profiles.id`, NULL | Usuario del sistema |
-| `first_name` / `last_name` | `text` | NOT NULL | Nombre completo |
-| `phone` | `text` | NULL | Contacto |
-| `email` | `text` | NULL | Contacto |
+| `first_name` / `last_name` | `text` | NOT NULL | **Únicos datos personales guardados** |
+| `registered_by` | `uuid` | FK → `profiles.id`, NOT NULL | Usuario que registró (automático) |
 | `is_active` | `boolean` | DEFAULT true | Borrado lógico |
-| `created_at` / `updated_at` | `timestamptz` | — | Auditoría |
+| `created_at` / `updated_at` | `timestamptz` | DEFAULT `now()` | Fecha y hora de registro (automáticas) |
+
+> Según el requerimiento final, del pastor solo se guardan nombre y apellido. No se almacenan teléfono ni correo. RLS exige `registered_by = auth.uid()` en el alta.
 
 ### `events`
 
@@ -283,11 +284,9 @@ create unique index churches_unique_active_name
 create table public.pastors (
   id uuid primary key default gen_random_uuid(),
   church_id uuid references public.churches (id),
-  profile_id uuid unique references public.profiles (id),
   first_name text not null,
   last_name text not null,
-  phone text,
-  email text,
+  registered_by uuid not null references public.profiles (id),
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

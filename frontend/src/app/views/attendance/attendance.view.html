@@ -1,0 +1,96 @@
+<app-page-header
+  eyebrow="Registro en vivo"
+  title="Asistencia de pastores"
+  subtitle="Seleccione el evento y el pastor. La hora y el usuario quedan registrados automáticamente."
+/>
+
+@if (error()) { <div class="toast error">{{ error() }}</div> }
+@if (success()) { <div class="toast">✓ {{ success() }}</div> }
+
+<div class="grid">
+  <section class="glass register-card">
+    <span class="tricolor"><i></i><i></i><i></i></span>
+    <p class="eyebrow">Nuevo registro</p>
+    <h2>Confirmar asistencia</h2>
+
+    <form (ngSubmit)="submit()">
+      <div class="field">
+        <label for="att-event">Evento</label>
+        <select id="att-event" name="eventId" [(ngModel)]="eventId">
+          <option value="">Seleccione el evento…</option>
+          @for (event of events(); track event.id) {
+            <option [value]="event.id">{{ event.name }} · {{ event.startDate }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="att-search">Buscar pastor</label>
+        <input id="att-search" name="term" [(ngModel)]="term" (ngModelChange)="onSearch()" placeholder="Escriba nombre o apellido…" />
+      </div>
+
+      <div class="field">
+        <label for="att-pastor">Pastor</label>
+        <select id="att-pastor" name="pastorId" [(ngModel)]="pastorId" [disabled]="pastors().length === 0">
+          <option value="">Seleccione un pastor…</option>
+          @for (pastor of pastors(); track pastor.id) {
+            <option [value]="pastor.id">{{ pastor.firstName }} {{ pastor.lastName }}{{ pastor.churchName ? ' · ' + pastor.churchName : '' }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="att-notes">Nota (opcional)</label>
+        <textarea id="att-notes" name="notes" [(ngModel)]="notes" placeholder="Observación breve…"></textarea>
+      </div>
+
+      <button class="btn btn-primary confirm" type="submit" [disabled]="saving() || !eventId || !pastorId">
+        @if (saving()) { Registrando… } @else { ✓ Confirmar asistencia }
+      </button>
+    </form>
+  </section>
+
+  <section class="glass list-card">
+    <div class="list-head">
+      <div>
+        <p class="eyebrow">Últimos registros</p>
+        <h2>Asistencia registrada</h2>
+      </div>
+      <span class="badge ok">{{ records().length }} en pantalla</span>
+    </div>
+
+    @if (loading()) {
+      <app-state-block [loading]="true" />
+    } @else if (records().length === 0) {
+      <app-state-block [empty]="true" emptyMessage="Todavía no hay asistencia registrada" />
+    } @else {
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr><th>Pastor</th><th>Iglesia</th><th>Hora</th><th>Registrado por</th><th>Estado</th><th></th></tr>
+          </thead>
+          <tbody>
+            @for (record of records(); track record.id) {
+              <tr>
+                <td><strong>{{ record.pastorFullName }}</strong><br /><small class="muted">{{ formatDate(record.checkedInAt) }}</small></td>
+                <td class="muted">{{ record.churchName ?? 'Sin iglesia' }}</td>
+                <td class="muted">{{ formatTime(record.checkedInAt) }}</td>
+                <td class="muted">{{ record.registeredByName }}</td>
+                <td>
+                  <span class="badge" [class.ok]="record.status !== 'cancelled'" [class.muted]="record.status === 'cancelled'">
+                    {{ record.status === 'cancelled' ? 'Cancelado' : 'Presente' }}
+                  </span>
+                </td>
+                <td>
+                  @if (record.status !== 'cancelled') {
+                    <button class="btn btn-danger btn-sm" (click)="cancel.emit(record.id)">Anular</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
+</div>

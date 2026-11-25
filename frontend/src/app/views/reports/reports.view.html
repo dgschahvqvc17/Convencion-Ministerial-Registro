@@ -1,0 +1,43 @@
+<app-page-header
+  eyebrow="Panel de resultados"
+  title="Reportes de asistencia"
+  subtitle="Consolidado por departamento, distrito e iglesia, actualizado en tiempo real."
+/>
+
+@if (error()) { <div class="toast error">{{ error() }}</div> }
+
+<section class="summary glass">
+  <div>
+    <p class="eyebrow">Total de registros</p>
+    <strong>{{ total() }}</strong>
+  </div>
+  <p class="script">Testifiquemos</p>
+</section>
+
+<section class="glass list-card">
+  @if (loading()) {
+    <app-state-block [loading]="true" />
+  } @else if (rows().length === 0) {
+    <app-state-block [empty]="true" emptyMessage="No hay datos para el reporte" />
+  } @else {
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr><th>Departamento / Región</th><th>Distrito</th><th>Iglesia</th><th>Registros</th><th>Confirmados</th><th>Último registro</th></tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.districtId + (row.churchId ?? '')) {
+            <tr>
+              <td><strong>{{ row.regionName }}</strong></td>
+              <td>{{ row.districtName }}</td>
+              <td class="muted">{{ row.churchName ?? '—' }}</td>
+              <td><span class="badge pending">{{ row.totalRegistered }}</span></td>
+              <td><span class="badge ok">{{ row.totalConfirmed }}</span></td>
+              <td class="muted">{{ formatDate(row.lastCheckIn) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

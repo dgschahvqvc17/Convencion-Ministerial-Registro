@@ -1,0 +1,176 @@
+<app-page-header
+  eyebrow="Solo administrador"
+  title="Estructura organizacional"
+  subtitle="Departamentos o regiones → distritos → iglesias. El orden garantiza reportes consistentes."
+/>
+
+@if (error()) {
+  <div class="toast error">{{ error() }}</div>
+}
+
+<div class="tabs">
+  <button [class.active]="tab() === 'regiones'" (click)="tab.set('regiones')">
+    Departamentos / Regiones <span>{{ regions().length }}</span>
+  </button>
+  <button [class.active]="tab() === 'distritos'" (click)="tab.set('distritos')">
+    Distritos <span>{{ districts().length }}</span>
+  </button>
+  <button [class.active]="tab() === 'iglesias'" (click)="tab.set('iglesias')">
+    Iglesias <span>{{ churches().length }}</span>
+  </button>
+</div>
+
+@if (loading()) {
+  <app-state-block [loading]="true" />
+} @else {
+  @switch (tab()) {
+    @case ('regiones') {
+      <div class="grid">
+        <form class="glass form-card" (ngSubmit)="submitRegion()">
+          <p class="eyebrow">Nuevo registro</p>
+          <h2>Crear departamento o región</h2>
+          <div class="field">
+            <label for="region-name">Nombre</label>
+            <input id="region-name" name="regionName" [(ngModel)]="regionName" placeholder="Ej. Cochabamba" />
+          </div>
+          <div class="field">
+            <label for="region-kind">Tipo</label>
+            <select id="region-kind" name="regionKind" [(ngModel)]="regionKind">
+              <option value="departamento">Departamento</option>
+              <option value="region">Región</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="region-country">País</label>
+            <input id="region-country" name="country" [(ngModel)]="country" />
+          </div>
+          <button class="btn btn-primary" type="submit">Crear</button>
+        </form>
+
+        <div class="glass list-card">
+          <div class="list-head">
+            <h2>Departamentos / Regiones</h2>
+            <span class="badge muted">{{ regions().length }} activos</span>
+          </div>
+          @if (regions().length === 0) {
+            <app-state-block [empty]="true" emptyMessage="Aún no hay departamentos registrados" />
+          } @else {
+            <div class="table-wrap">
+              <table class="data">
+                <thead><tr><th>Nombre</th><th>Tipo</th><th>País</th><th></th></tr></thead>
+                <tbody>
+                  @for (region of regions(); track region.id) {
+                    <tr>
+                      <td><strong>{{ region.name }}</strong></td>
+                      <td><span class="badge pending">{{ region.kind }}</span></td>
+                      <td class="muted">{{ region.country }}</td>
+                      <td>
+                        <button class="btn btn-danger btn-sm" (click)="deactivate.emit({ entity: 'region', id: region.id })">Desactivar</button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @case ('distritos') {
+      <div class="grid">
+        <form class="glass form-card" (ngSubmit)="submitDistrict()">
+          <p class="eyebrow">Nuevo registro</p>
+          <h2>Crear distrito</h2>
+          <div class="field">
+            <label for="district-region">Departamento / Región</label>
+            <select id="district-region" name="districtRegionId" [(ngModel)]="districtRegionId">
+              <option value="">Seleccione…</option>
+              @for (region of regions(); track region.id) {
+                <option [value]="region.id">{{ region.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label for="district-name">Nombre del distrito</label>
+            <input id="district-name" name="districtName" [(ngModel)]="districtName" placeholder="Ej. Distrito Central" />
+          </div>
+          <button class="btn btn-primary" type="submit">Crear distrito</button>
+        </form>
+
+        <div class="glass list-card">
+          <div class="list-head"><h2>Distritos</h2></div>
+          @if (districts().length === 0) {
+            <app-state-block [empty]="true" emptyMessage="Aún no hay distritos registrados" />
+          } @else {
+            <div class="table-wrap">
+              <table class="data">
+                <thead><tr><th>Distrito</th><th>Departamento / Región</th><th></th></tr></thead>
+                <tbody>
+                  @for (district of districts(); track district.id) {
+                    <tr>
+                      <td><strong>{{ district.name }}</strong></td>
+                      <td class="muted">{{ regionNameOf(district.regionId) }}</td>
+                      <td><button class="btn btn-danger btn-sm" (click)="deactivate.emit({ entity: 'district', id: district.id })">Desactivar</button></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @case ('iglesias') {
+      <div class="grid">
+        <form class="glass form-card" (ngSubmit)="submitChurch()">
+          <p class="eyebrow">Nuevo registro</p>
+          <h2>Crear iglesia</h2>
+          <div class="field">
+            <label for="church-district">Distrito</label>
+            <select id="church-district" name="churchDistrictId" [(ngModel)]="churchDistrictId">
+              <option value="">Seleccione…</option>
+              @for (district of districts(); track district.id) {
+                <option [value]="district.id">{{ district.name }} — {{ regionNameOf(district.regionId) }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label for="church-name">Nombre de la iglesia</label>
+            <input id="church-name" name="churchName" [(ngModel)]="churchName" placeholder="Ej. Iglesia Central" />
+          </div>
+          <div class="field">
+            <label for="church-address">Dirección (opcional)</label>
+            <input id="church-address" name="churchAddress" [(ngModel)]="churchAddress" />
+          </div>
+          <button class="btn btn-primary" type="submit">Crear iglesia</button>
+        </form>
+
+        <div class="glass list-card">
+          <div class="list-head">
+            <h2>Iglesias</h2>
+            <input class="search" name="search" [(ngModel)]="search" placeholder="Buscar iglesia…" />
+          </div>
+          @if (filteredChurches().length === 0) {
+            <app-state-block [empty]="true" emptyMessage="Aún no hay iglesias registradas" />
+          } @else {
+            <div class="table-wrap">
+              <table class="data">
+                <thead><tr><th>Iglesia</th><th>Distrito</th><th>Pastores</th><th></th></tr></thead>
+                <tbody>
+                  @for (church of filteredChurches(); track church.id) {
+                    <tr>
+                      <td><strong>{{ church.name }}</strong><br /><small class="muted">{{ church.regionName }}</small></td>
+                      <td class="muted">{{ church.districtName }}</td>
+                      <td><span class="badge ok">{{ church.pastorCount }}</span></td>
+                      <td><button class="btn btn-danger btn-sm" (click)="deactivate.emit({ entity: 'church', id: church.id })">Desactivar</button></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  }
+}

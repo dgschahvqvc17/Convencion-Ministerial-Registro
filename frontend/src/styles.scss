@@ -1,0 +1,343 @@
+/* ============================================================
+   44° Convención Ministerial · Sistema de registro
+   Identidad visual derivada de convenci_n_ministerial.md
+   ============================================================ */
+
+:root {
+  --bg-primary: #141b5b;
+  --bg-deep: #0d1240;
+  --bg-card: #1e2a78;
+  --bg-accent: #2b3ba0;
+
+  --gold: #f7b500;
+  --gold-light: #ffd000;
+  --gold-hover: #e58e00;
+
+  --bolivia-red: #d52b1e;
+  --bolivia-yellow: #f9e300;
+  --bolivia-green: #007934;
+
+  --text-light: #ffffff;
+  --text-muted: #b0b8d1;
+  --text-dark: #0f143a;
+
+  --font-display: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-script: 'Pacifico', cursive;
+
+  --radius: 18px;
+  --radius-sm: 10px;
+  --shadow: 0 18px 50px rgba(5, 9, 40, 0.45);
+  --glow: 0 0 0 3px rgba(247, 181, 0, 0.24);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text-light);
+  background:
+    radial-gradient(circle at 78% -10%, rgba(247, 181, 0, 0.16), transparent 42%),
+    radial-gradient(circle at 12% 8%, rgba(43, 59, 160, 0.9), transparent 45%),
+    radial-gradient(circle at 50% 20%, #273694 0%, var(--bg-primary) 58%, var(--bg-deep) 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* --- Utilidades de superficie --- */
+.glass {
+  background: linear-gradient(160deg, rgba(43, 59, 160, 0.62), rgba(20, 27, 91, 0.78));
+  border: 1px solid rgba(247, 181, 0, 0.2);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.tricolor {
+  display: inline-flex;
+  gap: 4px;
+
+  i {
+    display: block;
+    width: 18px;
+    height: 5px;
+    border-radius: 3px;
+  }
+
+  i:nth-child(1) { background: var(--bolivia-red); }
+  i:nth-child(2) { background: var(--bolivia-yellow); }
+  i:nth-child(3) { background: var(--bolivia-green); }
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.script {
+  font-family: var(--font-script);
+  color: var(--gold);
+}
+
+/* --- Botones --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+  color: var(--text-dark);
+  box-shadow: 0 8px 22px rgba(247, 181, 0, 0.38);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(180deg, var(--gold) 0%, var(--gold-hover) 100%);
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  color: var(--text-light);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.btn-danger {
+  background: rgba(213, 43, 30, 0.16);
+  border: 1px solid rgba(213, 43, 30, 0.6);
+  color: #ffb3ad;
+}
+
+.btn-sm {
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+}
+
+/* --- Formularios --- */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    color: var(--text-dark);
+    background: #fff;
+    border: 1.5px solid transparent;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+      border-color: var(--gold);
+      box-shadow: var(--glow);
+    }
+
+    &::placeholder {
+      color: #8f97ac;
+    }
+  }
+
+  textarea {
+    min-height: 84px;
+    padding-top: 12px;
+    resize: vertical;
+  }
+
+  .error {
+    font-size: 0.78rem;
+    color: #ffb3ad;
+  }
+}
+
+/* --- Tablas --- */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th {
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: rgba(13, 18, 64, 0.5);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 13px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    vertical-align: middle;
+  }
+
+  tbody tr:hover {
+    background: rgba(43, 59, 160, 0.28);
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+
+  &.ok {
+    background: rgba(0, 121, 52, 0.28);
+    color: #6ee7a8;
+    border: 1px solid rgba(0, 121, 52, 0.7);
+  }
+
+  &.pending {
+    background: rgba(247, 181, 0, 0.16);
+    color: var(--gold-light);
+    border: 1px solid rgba(247, 181, 0, 0.5);
+  }
+
+  &.muted {
+    background: rgba(176, 184, 209, 0.12);
+    color: var(--text-muted);
+  }
+}
+
+/* --- Estados --- */
+.state {
+  padding: 36px 20px;
+  text-align: center;
+  color: var(--text-muted);
+
+  strong {
+    display: block;
+    color: var(--text-light);
+    margin-bottom: 6px;
+  }
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 12px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.toast {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 999;
+  max-width: 360px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  animation: slide-up 0.25s ease;
+}
+
+.toast.error {
+  color: #fff;
+  background: linear-gradient(180deg, #e5493c, var(--bolivia-red));
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

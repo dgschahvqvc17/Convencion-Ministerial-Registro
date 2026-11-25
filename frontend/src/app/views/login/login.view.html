@@ -1,0 +1,70 @@
+<main class="login-screen">
+  <section class="story" aria-hidden="true">
+    <div class="orb orb-one"></div>
+    <div class="orb orb-two"></div>
+
+    <div class="brand">
+      <span class="tricolor"><i></i><i></i><i></i></span>
+      <p class="eyebrow">Iglesia de Dios de la Profecía · Bolivia</p>
+      <h1>44°<br />CONVENCIÓN<br /><span>MINISTERIAL</span></h1>
+      <p class="script">Cochabamba</p>
+      <p class="motto">1 — 3 DICIEMBRE 2026</p>
+      <h2>TESTIFIQUEMOS</h2>
+      <p class="verse">«Y seréis mis testigos» — Isaías 43:10</p>
+    </div>
+
+    <div class="skyline"></div>
+  </section>
+
+  <section class="panel">
+    <form class="card glass" (ngSubmit)="submit()" novalidate>
+      <span class="tricolor"><i></i><i></i><i></i></span>
+      <p class="eyebrow">Acceso al sistema</p>
+      <h2>Bienvenido de nuevo</h2>
+      <p class="muted intro">Ingrese con su usuario de registro para continuar.</p>
+
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          autocomplete="email"
+          placeholder="nombre@convencion.org"
+          [(ngModel)]="email"
+        />
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <div class="password">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            name="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            [(ngModel)]="password"
+          />
+          <button type="button" class="toggle" (click)="showPassword = !showPassword">
+            {{ showPassword ? 'Ocultar' : 'Ver' }}
+          </button>
+        </div>
+      </div>
+
+      @if (error()) {
+        <p class="alert" role="alert">{{ error() }}</p>
+      }
+
+      <button class="btn btn-primary submit" type="submit" [disabled]="loading()">
+        @if (loading()) {
+          <span class="mini-spinner"></span> Ingresando…
+        } @else {
+          Ingresar al sistema →
+        }
+      </button>
+
+      <p class="foot muted">Sistema oficial de registro de asistencia · 2026</p>
+    </form>
+  </section>
+</main>

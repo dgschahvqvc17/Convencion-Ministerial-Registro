@@ -1,6 +1,6 @@
 # 06 · Supabase
 
-> Estado: **propuesta actualizada a arquitectura MVC**. Supabase es accedido por el **backend**, nunca por el frontend.
+> Estado: **implementado**. Supabase es accedido por el **backend**, nunca por el frontend. La fuente autoritativa del esquema y las políticas es [`../supabase/migrations/0001_init.sql`](../supabase/migrations/0001_init.sql); el SQL de este documento es referencia didáctica.
 
 ## 1. Configuración
 
@@ -181,26 +181,27 @@ create policy "districts_write" on public.districts
   using (public.current_role() = 'admin')
   with check (public.current_role() = 'admin');
 
--- Iglesias y pastores: administrador u operador
+-- Iglesias: solo administrador (según la regla confirmada)
 create policy "churches_write" on public.churches
   for all to authenticated
-  using (public.current_role() in ('admin', 'operator'))
-  with check (public.current_role() in ('admin', 'operator'));
+  using (public.current_role() = 'admin')
+  with check (public.current_role() = 'admin');
 
+-- Pastores: administrador u operador, con auditoría obligatoria del usuario en sesión
 create policy "pastors_write" on public.pastors
   for all to authenticated
   using (public.current_role() in ('admin', 'operator'))
-  with check (public.current_role() in ('admin', 'operator'));
+  with check (
+    public.current_role() in ('admin', 'operator')
+    and registered_by = auth.uid()
+  );
 
--- Asistencia: administrador, operador o el propio pastor
+-- Asistencia: administrador u operador, con auditoría obligatoria
 create policy "attendance_insert" on public.attendances
   for insert to authenticated
   with check (
     public.current_role() in ('admin', 'operator')
-    or (
-      public.current_role() = 'pastor'
-      and pastor_id = (select id from public.pastors where profile_id = auth.uid())
-    )
+    and registered_by = auth.uid()
   );
 
 create policy "attendance_write" on public.attendances

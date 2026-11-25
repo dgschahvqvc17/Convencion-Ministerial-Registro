@@ -1,14 +1,14 @@
 # Índice de documentación
 
-Documento vivo. Estado: **arquitectura MVC definida; esqueleto de carpetas creado**.
+Documento vivo. Estado: **aplicación implementada; backend y frontend compilan y las pruebas unitarias pasan**.
 
 | # | Documento | Propósito | Estado |
 | --- | --- | --- | --- |
-| — | [README](../README.md) | Vista general y enlaces | Acordado en estructura |
+| — | [README](../README.md) | Vista general y enlaces | Implementado |
 | — | [CONTRIBUTING](../CONTRIBUTING.md) | Flujo de trabajo y commits | Borrador |
 | — | [Guía UI/UX](../convenci_n_ministerial.md) | Colores, tipografías y componentes | Existente |
-| — | [Backend](../backend/README.md) | Estructura MVC del servidor | Esqueleto |
-| — | [Frontend](../frontend/README.md) | Estructura MVC de la app | Esqueleto |
+| — | [Backend](../backend/README.md) | Estructura MVC del servidor | Implementado |
+| — | [Frontend](../frontend/README.md) | Estructura MVC de la app | Implementado |
 | 00 | Índice (este archivo) | Mapa documental | Borrador |
 | 01 | [Contexto y alcance](01-contexto-y-alcance.md) | Por qué existe el sistema y qué cubre | Borrador |
 | 02 | [Requisitos](02-requisitos.md) | RF, RNF e historias de usuario | Borrador |
@@ -20,16 +20,18 @@ Documento vivo. Estado: **arquitectura MVC definida; esqueleto de carpetas cread
 | 08 | [Estándares y Clean Code](08-estandares-y-clean-code.md) | Convenciones y pruebas | Actualizada |
 | 09 | [Plan de trabajo](09-plan-de-trabajo.md) | Fases y criterios de aceptación | Actualizada |
 | 10 | [Glosario y supuestos](10-glosario-y-supuestos.md) | Vocabulario y preguntas abiertas | Actualizada |
-| 11 | [Registro de decisiones](11-registro-de-decisiones.md) | ADR (incluye ADR-010…012) | Actualizada |
-| 12 | [Pantallas y flujos](12-pantallas-y-flujos.md) | Inventario UI y navegación | Borrador |
-| 13 | [API REST](13-api-rest.md) | Endpoints, respuestas y errores | Nuevo |
+| 11 | [Registro de decisiones](11-registro-de-decisiones.md) | ADR (incluye ADR-010…013) | Actualizada |
+| 12 | [Pantallas y flujos](12-pantallas-y-flujos.md) | Inventario UI y navegación | Implementado |
+| 13 | [API REST](13-api-rest.md) | Endpoints, respuestas y errores | Implementada |
+| 14 | [Guía Supabase](14-guia-supabase.md) | Creación de la base de datos paso a paso | Nueva |
 
 ## Cómo usar esta documentación
 
 1. Leer **01** y **02** para entender el producto.
 2. Leer **03**, **04** y **12** para entender el dominio y las pantallas.
-3. Leer **05**, **06**, **07** y **13** antes de escribir código.
-4. Consultar **08** en cada PR y **11** cuando cambie una decisión técnica.
+3. Leer **05**, **06**, **07** y **13** para entender la implementación.
+4. Seguir **14** para crear la base de datos en Supabase.
+5. Consultar **08** en cada PR y **11** cuando cambie una decisión técnica.
 
 ## Cambio de arquitectura
 

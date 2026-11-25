@@ -1,0 +1,43 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 34px 38px;
+  margin-bottom: 22px;
+  background:
+    radial-gradient(circle at 85% 30%, rgba(247,181,0,.22), transparent 40%),
+    linear-gradient(120deg, rgba(43,59,160,.8), rgba(20,27,91,.9));
+
+  h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); margin: 12px 0 4px; }
+  .script { font-size: 1.9rem; margin: 0; }
+  .dot { color: var(--gold); margin: 0 6px; }
+}
+.hero-mark {
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(4rem, 12vw, 9rem);
+  line-height: 1; color: rgba(255,255,255,.06); letter-spacing: -.06em;
+}
+
+.stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; margin-bottom: 30px;
+}
+
+.quick > div:first-child { margin-bottom: 16px; }
+.quick h2 { font-size: 1.25rem; margin-top: 8px; }
+.quick-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;
+}
+.quick-card {
+  position: relative; display: flex; flex-direction: column; gap: 6px;
+  padding: 22px; transition: transform .2s ease, border-color .2s ease;
+
+  &:hover { transform: translateY(-5px); border-color: rgba(247,181,0,.6); }
+  strong { font-size: 1rem; }
+  small { color: var(--text-muted); font-size: .82rem; line-height: 1.5; }
+  em { position: absolute; top: 18px; right: 20px; color: var(--gold); font-style: normal; font-size: 1.2rem; }
+}
+.q-icon {
+  display: grid; place-items: center; width: 42px; height: 42px; margin-bottom: 8px;
+  border-radius: 12px; font-size: 1.2rem; color: var(--gold);
+  background: rgba(247,181,0,.12); border: 1px solid rgba(247,181,0,.3);
+}
