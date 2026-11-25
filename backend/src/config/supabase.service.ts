@@ -7,7 +7,8 @@ export class SupabaseService {
   private readonly adminClient: SupabaseClient;
 
   constructor() {
-    this.adminClient = createClient(env.supabaseUrl, env.serviceRoleKey, {
+    // Clave secreta: solo backend, bypassea RLS (equivalente a service_role).
+    this.adminClient = createClient(env.supabaseUrl, env.secretKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
   }
@@ -19,7 +20,8 @@ export class SupabaseService {
 
   /** Cliente con el JWT del usuario: las políticas RLS se aplican. */
   forUser(accessToken: string): SupabaseClient {
-    return createClient(env.supabaseUrl, env.anonKey, {
+    // Clave publicable: respeta RLS; el JWT del usuario va en Authorization.
+    return createClient(env.supabaseUrl, env.publishableKey, {
       global: { headers: { Authorization: `Bearer ${accessToken}` } },
       auth: { persistSession: false, autoRefreshToken: false },
     });

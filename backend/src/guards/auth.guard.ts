@@ -44,9 +44,9 @@ export class AuthGuard implements CanActivate {
       throw new AppError('UNAUTHORIZED', 401);
     }
 
-    let userId = await this.verify(tokens.access_token);
+    let identity = await this.verify(tokens.access_token);
 
-    if (!userId && tokens.refresh_token) {
+    if (!identity && tokens.refresh_token) {
       const { data, error } = await this.supabase.admin.auth.refreshSession({
         refresh_token: tokens.refresh_token,
       });
@@ -58,17 +58,21 @@ export class AuthGuard implements CanActivate {
         refresh_token: data.session.refresh_token,
       };
       response.cookie(env.cookieName, JSON.stringify(tokens), this.cookieOptions());
-      userId = data.session.user.id;
+      identity = {
+        id: data.session.user.id,
+        email: data.session.user.email ?? '',
+        createdAt: data.session.user.created_at ?? '',
+      };
     }
 
-    if (!userId) {
+    if (!identity) {
       throw new AppError('UNAUTHORIZED', 401);
     }
 
     const { data: profile, error: profileError } = await this.supabase.admin
       .from('profiles')
       .select('id, full_name, is_active, role_id, roles(name)')
-      .eq('id', userId)
+      .eq('id', identity.id)
       .single();
 
     if (profileError || !profile || !profile.is_active) {
@@ -79,20 +83,27 @@ export class AuthGuard implements CanActivate {
 
     request.user = {
       id: profile.id as string,
-      email: '',
+      email: identity.email,
       fullName: profile.full_name as string,
       role,
       isActive: profile.is_active as boolean,
-      createdAt: '',
+      createdAt: identity.createdAt,
       accessToken: tokens.access_token,
     };
 
     return true;
   }
 
-  private async verify(token: string): Promise<string | null> {
+  private async verify(
+    token: string,
+  ): Promise<{ id: string; email: string; createdAt: string } | null> {
     const { data, error } = await this.supabase.admin.auth.getUser(token);
-    return error || !data.user ? null : data.user.id;
+    if (error || !data.user) return null;
+    return {
+      id: data.user.id,
+      email: data.user.email ?? '',
+      createdAt: data.user.created_at ?? '',
+    };
   }
 
   private cookieOptions() {

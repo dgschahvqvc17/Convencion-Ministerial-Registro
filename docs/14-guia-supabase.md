@@ -55,11 +55,13 @@ Debe mostrar `admin` en la columna `rol`.
 
 ## 5. Obtener las claves del proyecto
 
-1. Ve a **Project Settings → API**.
+1. Ve a **Project Settings → API Keys** (en algunos proyectos aparece como **API**).
 2. Copia:
    - **Project URL** → `SUPABASE_URL`
-   - **anon public** key → `SUPABASE_ANON_KEY`
-   - **service_role** key → `SUPABASE_SERVICE_ROLE_KEY` (solo backend; **nunca** en el frontend)
+   - **Publishable key** (`sb_publishable_…`) → `SUPABASE_PUBLISHABLE_KEY`
+   - **Secret key** (`sb_secret_…`) → `SUPABASE_SECRET_KEY` (solo backend; **nunca** en el frontend)
+
+> Si tu proyecto muestra las claves antiguas (`anon` / `service_role` que empiezan con `eyJ`), el backend también las acepta: ponlas en `SUPABASE_ANON_KEY` y `SUPABASE_SERVICE_ROLE_KEY`. Pero las nuevas `sb_publishable_…` / `sb_secret_…` son las recomendadas.
 
 ## 6. Configurar el backend
 
@@ -68,8 +70,8 @@ Copia `backend/.env.example` a `backend/.env` y completa:
 ```text
 PORT=3000
 SUPABASE_URL=https://TU-PROYECTO.supabase.co
-SUPABASE_ANON_KEY=TU_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY=TU_SERVICE_ROLE_KEY
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxxxxxxxxxxxxxxxxxxxxx
+SUPABASE_SECRET_KEY=sb_secret_xxxxxxxxxxxxxxxxxxxxxxxx
 SESSION_COOKIE_NAME=convencion_session
 FRONTEND_URL=http://localhost:4200
 NODE_ENV=development
@@ -128,7 +130,7 @@ select * from public.v_attendance_summary order by church_name;
 
 ## 11. Notas de seguridad
 
-- El `service_role` se usa **solo en el backend** para crear usuarios y consultar perfiles.
+- La clave secreta (`sb_secret_…`) se usa **solo en el backend** para crear usuarios y consultar perfiles.
 - Las demás operaciones usan el JWT del usuario, por lo que **RLS** se aplica en cada consulta.
 - El administrador es el único que puede crear departamentos/regiones, distritos, iglesias y usuarios.
 - Los usuarios de registro (`operator`) solo crean pastores y asistencia.

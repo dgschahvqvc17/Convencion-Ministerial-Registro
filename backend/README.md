@@ -66,7 +66,7 @@ src/
 
 - Cookie httpOnly/Secure/SameSite=Lax con Access + Refresh token de Supabase.
 - `AuthGuard` valida el JWT y adjunta `req.user`; `RolesGuard` lee `@Roles()`.
-- Cliente `service_role` solo para Auth y perfiles; nunca se envía al frontend.
+- Cliente con clave secreta (`sb_secret_…`, antes `service_role`) solo para Auth y perfiles; nunca se envía al frontend.
 - Los repositorios usan el JWT del usuario para que RLS se aplique.
 
 ## Pruebas

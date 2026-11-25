@@ -19,7 +19,7 @@ supabase gen types typescript --local > backend/src/types/database.types.ts
 | API usada | Supabase JS SDK v2 **desde el backend** |
 | Auth | Email + contraseña, sesión mediada por el backend |
 | Cliente por usuario | JWT reenviado al SDK → RLS activo |
-| Cliente admin | `service_role` solo en `backend/`, para usuarios y roles |
+| Cliente admin | clave secreta (`sb_secret_…`) solo en `backend/`, para usuarios y roles |
 
 ## 2. Variables de entorno (solo nombres)
 
@@ -28,11 +28,13 @@ supabase gen types typescript --local > backend/src/types/database.types.ts
 ```text
 PORT=
 SUPABASE_URL=
-SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SECRET_KEY=
 SESSION_COOKIE_NAME=
 NODE_ENV=
 ```
+
+> El backend también acepta las claves heredadas `SUPABASE_ANON_KEY` y `SUPABASE_SERVICE_ROLE_KEY` como respaldo, pero Supabase las retira a fin de 2026.
 
 **`frontend/.env.example`**
 
@@ -40,7 +42,7 @@ NODE_ENV=
 API_BASE_URL=
 ```
 
-> La clave `service_role` **nunca** se incluye en `frontend/` ni en el bundle de Angular.
+> La clave secreta (`sb_secret_…`, antes `service_role`) **nunca** se incluye en `frontend/` ni en el bundle de Angular.
 
 ## 3. Clientes en el backend
 
@@ -279,8 +281,8 @@ supabase/seed.sql
 ## 11. Checklist de producción
 
 - [ ] RLS activo en todas las tablas y vistas.
-- [ ] `service_role` presente solo en variables del backend.
-- [ ] `service_role` ausente del bundle de Angular.
+- [ ] Clave secreta (`sb_secret_…`) presente solo en variables del backend.
+- [ ] Clave secreta ausente del bundle de Angular.
 - [ ] Políticas probadas con los cuatro roles.
 - [ ] Cookie de sesión httpOnly/Secure/SameSite correctamente configurada.
 - [ ] CORS restringido al dominio del frontend.
